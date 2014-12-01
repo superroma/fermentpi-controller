@@ -50,7 +50,7 @@ def saveConfig(config):
         configFile = open(configFileName, "w")
         json.dump(config, configFile,sort_keys=True,
                   indent=4, separators=(',', ': '))
-    except e:
+    except Exception as e:
         print(e)
     finally:
         configFile.close()
