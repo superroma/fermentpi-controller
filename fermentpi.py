@@ -19,6 +19,7 @@ def getSensorsTemp():
         result = [{'Address':"123456", 'CurrentValue':23.5}, {'Address':"123457", 'CurrentValue':24.5}]
     else:    
         result = []
+        w1 = W1ThermSensor()
         for sensor in W1ThermSensor.get_available_sensors():
             result.append({"Address": sensor.id, "CurrentValue":sensor.get_temperature()})
     print(result)
