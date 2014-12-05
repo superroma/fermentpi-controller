@@ -8,7 +8,7 @@ import time
 
 test = False
 configFileName = "fermentpi.config"
-tickIntervalSec = 10
+tickIntervalSec = 120
 
 def getControllerName():
     return socket.gethostname()
