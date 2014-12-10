@@ -97,14 +97,14 @@ def doReport(config, temp):
         return config
     
 def doControl(config, temp):
-    if(config.Sensors[0].SetValue):
-        setValue = config.Sensors[0].SetValue
+    if(config['Sensors'][0]['SetValue']):
+        setValue = ['Sensors'][0]['SetValue']
         if coolerOn:
-            if temp[0].CurrentValue < setValue:
+            if temp[0]['CurrentValue'] < setValue:
                 coolerOn = False
                 controlCooler(coolerOn)
         else:
-            if temp[0].CurrentValue > setValue+hysteresis:
+            if temp[0]['CurrentValue'] > setValue+hysteresis:
                 coolerOn = True
                 controlCooler(coolerOn)                
     return
