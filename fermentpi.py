@@ -1,3 +1,4 @@
+import sys
 import json
 import requests
 from w1thermsensor import W1ThermSensor
@@ -10,6 +11,7 @@ try:
 except RuntimeError:
     print("Error importing RPi.GPIO! Try sudo <your command>")
 
+global coolerOn
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 120
@@ -97,14 +99,16 @@ def doReport(config, temp):
         return config
     
 def doControl(config, temp):
-    if(config['Sensors'][0]['SetValue']):
-        setValue = ['Sensors'][0]['SetValue']
+    if 'SetValue' in config['Sensors'][0]:
+        setValue = config['Sensors'][0]['SetValue']
         if coolerOn:
             if temp[0]['CurrentValue'] < setValue:
+		print("curent temp is too low, stop cooling")
                 coolerOn = False
                 controlCooler(coolerOn)
         else:
             if temp[0]['CurrentValue'] > setValue+hysteresis:
+		print("current temp is too high, start cooler")
                 coolerOn = True
                 controlCooler(coolerOn)                
     return
@@ -121,7 +125,8 @@ def main():
             print("===================== Sleeping ===========================")
             time.sleep(tickIntervalSec)
     except:
-        print("error")
+        print "error",sys.exc_info()[0]
+	raise
     finally:
         GPIO.cleanup()
     
