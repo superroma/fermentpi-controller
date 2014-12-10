@@ -14,7 +14,7 @@ except RuntimeError:
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 10
-coolerPinNo = 8 #Assuming only one controller cooler TODO - change to array!
+coolerPinNo = 10 #Assuming only one controller cooler TODO - change to array!
 hysteresis = 1.0
 coolerOn = False
 
