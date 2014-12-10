@@ -99,6 +99,7 @@ def doReport(config, temp):
         return config
     
 def doControl(config, temp):
+    global coolerOn
     if 'SetValue' in config['Sensors'][0]:
         setValue = config['Sensors'][0]['SetValue']
         if coolerOn:
