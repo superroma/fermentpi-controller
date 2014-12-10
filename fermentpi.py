@@ -5,10 +5,27 @@ import os
 import socket
 import time
 
+try:
+    import RPi.GPIO as GPIO
+except RuntimeError:
+    print("Error importing RPi.GPIO! Try sudo <your command>")
 
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 120
+coolerPinNo = 15
+def gpioSetup():
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(coolerPinNo, GPIO.OUT)
+    return
+
+def controlCooler(isOn): 
+    if isOn:
+        GPIO.output(coolerPinNo, GPIO.HIGH)
+    else:
+        GPIO.output(coolerPinNo, GPIO.LOW)
+    return
+                
 
 def getControllerName():
     return socket.gethostname()
@@ -80,14 +97,20 @@ def doControl(config, temp):
     return
 
 def main():
-    config = readConfig()
-    while True:
-        temp = getSensorsTemp()
-        config = doReport(config, temp)
-        saveConfig(config)
-        doControl(config, temp)
-        print("===================== Sleeping ===========================")
-        time.sleep(tickIntervalSec)
+    try:
+        gpioSetup()
+        config = readConfig()
+        while True:
+            temp = getSensorsTemp()
+            config = doReport(config, temp)
+            saveConfig(config)
+            doControl(config, temp)
+            print("===================== Sleeping ===========================")
+            time.sleep(tickIntervalSec)
+    except:
+        print("error")
+    finally:
+        GPIO.cleanup()
     
 if __name__ == '__main__':
     main()
