@@ -99,13 +99,14 @@ def doReport(config, temp):
 def doControl(config, temp):
     if 'SetValue' in config['Sensors'][0]:
         setValue = config['Sensors'][0]['SetValue']
+        currValue = temp[0]['CurrentValue']
         if isCoolerOn():
-            if temp[0]['CurrentValue'] < setValue:
-		print("curent temp is too low, stop cooling")
-                controlCooler(False)
+            if currValue < setValue :
+                print("curent temp is too low, stop cooling")
+                controlCooler(False)        
         else:
-            if temp[0]['CurrentValue'] > setValue+hysteresis:
-		print("current temp is too high, start cooler")
+            if currValue > setValue+hysteresis:
+                print("current temp is too high, start cooler")
                 controlCooler(True)                
     return
 
