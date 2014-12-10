@@ -13,7 +13,10 @@ except RuntimeError:
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 120
-coolerPinNo = 15
+coolerPinNo = 15 #Assuming only one controller cooler TODO - change to array!
+hysteresis = 1.0
+coolerOn = False
+
 def gpioSetup():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(coolerPinNo, GPIO.OUT)
@@ -94,6 +97,16 @@ def doReport(config, temp):
         return config
     
 def doControl(config, temp):
+    if(config.Sensors[0].SetValue):
+        setValue = config.Sensors[0].SetValue
+        if coolerOn:
+            if temp[0].CurrentValue < setValue:
+                coolerOn = False
+                controlCooler(coolerOn)
+        else:
+            if temp[0].CurrentValue > setValue+hysteresis:
+                coolerOn = True
+                controlCooler(coolerOn)                
     return
 
 def main():
