@@ -11,7 +11,6 @@ try:
 except RuntimeError:
     print("Error importing RPi.GPIO! Try sudo <your command>")
 
-global coolerOn
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 120
@@ -25,12 +24,11 @@ def gpioSetup():
     return
 
 def controlCooler(isOn): 
-    if isOn:
-        GPIO.output(coolerPinNo, GPIO.HIGH)
-    else:
-        GPIO.output(coolerPinNo, GPIO.LOW)
+    GPIO.output(coolerPinNo, isOn)
     return
-                
+
+def isCoolerOn():
+    return GPIO.input(coolerPinNo)
 
 def getControllerName():
     return socket.gethostname()
@@ -99,19 +97,16 @@ def doReport(config, temp):
         return config
     
 def doControl(config, temp):
-    global coolerOn
     if 'SetValue' in config['Sensors'][0]:
         setValue = config['Sensors'][0]['SetValue']
-        if coolerOn:
+        if isCoolerOn():
             if temp[0]['CurrentValue'] < setValue:
 		print("curent temp is too low, stop cooling")
-                coolerOn = False
-                controlCooler(coolerOn)
+                controlCooler(False)
         else:
             if temp[0]['CurrentValue'] > setValue+hysteresis:
 		print("current temp is too high, start cooler")
-                coolerOn = True
-                controlCooler(coolerOn)                
+                controlCooler(True)                
     return
 
 def main():
