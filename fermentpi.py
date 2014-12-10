@@ -15,7 +15,7 @@ global coolerOn
 test = False
 configFileName = "fermentpi.config"
 tickIntervalSec = 120
-coolerPinNo = 15 #Assuming only one controller cooler TODO - change to array!
+coolerPinNo = 8 #Assuming only one controller cooler TODO - change to array!
 hysteresis = 1.0
 coolerOn = False
 
